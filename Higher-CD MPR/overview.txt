@@ -1,0 +1,95 @@
+TODO:
+	1. We should prove that each state should be checked at least once in an optimal algorithm
+	2. Experinment 
+	3. Data Analysis
+	4. What to compare
+
+
+Related Work:
+	k: the size of motif
+	Spacey random walk: order = k-1
+	Motif adjacency = 2
+	2 -> k-1
+
+
+At first, we want to work on higher-order random walk
+higher-order walk(Implemented) -> In order to run RW, we hope to detect connected components
+							-> Almost all connected algorithms suffer from the disconnectivity
+								For example, sampling
+										The random walker will be trapped in part of the graph
+											-> A snapshot got from the random walker will not represent the entire dataset well
+								Clustering
+										Minimize an objective function,e.g conductance,
+											if the graph is disconnected, then Min(conductance) = 0
+										E.g. ABCG DEFHI RS
+										S = (ABCGDEFHI) S' =(RS)
+										S = (DEFHI) S' = (ABCGRS)
+Therefore, we need to detect connected components before performing higher-order random walk.
+
+Higher-order connected components is compliated-> It is not as simple as standard graph.
+Why?
+One node can be in more than one connected component
+motif: 1->2->3
+A->B->C<-D<-E
+ABC,CDE
+Instead of working on node, we have to switch to node tuple.
+
+If we switch to node tuples, then if we simply modify the DFS algorithm, we cannot get a linear time algorithm because there will be more edges. 
+ABC -> ab,ac,bc, ab-ac,ab-bc,ac-bc
+ABCDEF -> ab-ac,ab-ad,ab-ae .... ab-ef
+We also add one more path transformation as DFS
+DFS: O(n+m)
+Higher: O(N+M+n) , N is the number of node tuples, and M is the number of higher-order edges
+N~CkrM
+Expected: O(CkrM+n) vs O(Ckr(Ckr-1)M+n) (DFS)
+Ckr(Ckr-1)M
+We introduce two algorithms:
+	1. Two-task: (2 pass)
+		Standard graph:
+			One edge will be only in one connected component
+		Higher-order graph:
+			One motif/higher-order edge will be only in one connected component
+	2. Disjointset: (2 pass)
+		Standard graph:
+			One node will be only in one connected component
+		Higher-order graph:
+			One node tuple can be only in one connected component
+
+Two-task O(CkrM+n) is better than DFS
+Disjointset O(CkrM+n) is better than DFS
+
+Two-task vs Disjointset (Unknown)
+
+CkrM is the upper bound of the node tuples
+ABC -> AB,AC,BC,DE,DF,EF (6 tuples) 
+DEF
+If there are M connected component (i.e. the entire higher-order is disconnected), then we will have CkrM
+
+ABC -> AB,AC,BC
+BCA
+
+
+How Standard graph connected component studied?
+~1973 O(n+m)- Efficient DFS-based connected component detection
+
+better performance but for special kinds graph
+We have already run the DFS-based algorithm in O(n+m)
+We are to detect disconnectivity in dynamic graph later in O(logn)
+
+Application: Internet Routing graph, we have already generated the routing table, but some nodes fail in the internet, we can use less time instead of n+m time to find the disconnected nodes
+
+A->B->C
+A->B->D
+A->B->E
+ABC
+ABD
+ABE
+
+B unfollow E, and follow F
+AB will remained unchanged, but ABE -> ABF
+A unfollow B, then ABC,ABD,ABE will disappear at the same time
+
+Optimization:
+	only initialize motif
+	tuples: check and mark
+	no motif-to-tuple queue

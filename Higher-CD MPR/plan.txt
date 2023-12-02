@@ -1,0 +1,89 @@
+What I get:
+    A list of Node tuples
+What we want:
+    A list of Nodes
+
+(1,2),(1,3),(3,4) -> (1,2,3,4)
+
+1. Keep a boolean vector of size n for each connected component
+2. Push all nodes to a new vector, and then sort it. O(n), O(nlogn)
+3. Create a map(heap), find(key) O(1) If there is collision, O(n)
+
+DisjointSet:
+    I work on all connected components at the same
+TwoTask/DFS-based:(I will be able to know the number of connected components)
+    One connected component at a time
+
+
+
+
+
+
+
+
+
+
+
+
+Goal:
+    1. Implement all 3 algorithms in C++
+    2. Running experiments
+        a) Get input file
+        b) Choose what to test
+
+1:
+    DisjointSet:
+        Done, Tested for 2-order graph
+        I still need to test for larger order
+    TwoTask:
+        Python Done, Tested both 2-order and 3-order in python
+        Partially finish TwoTask in C++
+    With some thoughts, we can easily go to DFS-based algorithm
+    DFS: O(Ckr(Ckr-1)M+n) - baseline
+        Python Done, Tested both 2-order and 3-order in python
+        Nothing has been done yet in C++
+2. Running experiments:
+    a) Get input file:
+        Have different number of nodes, edges, higher-order edges, different motifs
+        We hope the results of number of connected components should also be very different:
+            3  vs 10000
+        Smaller number of connected components:
+            A lot of node tuples are shared
+        CkrM is an upper bound:
+            When the number of connected components is large, we are closer to this upper bound
+        CkrM/k! is a lower bound:
+            1 2 3
+            1 3 2
+            2 1 3
+            2 3 1
+            3 2 1
+            3 1 2
+        number of components --> the number of node tuples
+        - I have already written a script to generate the files
+    b) Choose what to test:
+        Time
+        i) number of components vs. number of node tuples
+        ii) Time vs number of node tuples
+        iii) Time vs number of motifs (X)
+        iv) number of motifs vs. number of components (X)
+        v) the order of graph (r) vs time
+        vi) the order of graph (r) vs number of components 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
